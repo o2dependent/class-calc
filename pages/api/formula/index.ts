@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import getArrayFromString from '../../../calc_helpers/getArrayFromString';
-import getFormulaFromArray from '../../../calc_helpers/getFormulaFromArray';
 import parseFormula from '../../../calc_helpers/parseFormula';
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {

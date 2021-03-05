@@ -1,13 +1,52 @@
 import { T_CalcArr } from './calcTypes';
 
 export default function getArrayFromString(functionString: string): T_CalcArr {
-	// check if string is valid to be converted
-
-	// order of operations
-	const PEMDAS = ['*', '/', '+', '-'];
 	// split string
 	let split: string[] | any = functionString.split('');
 
+	// check for parenthesis
+	// store objects of begining and ending of paren statement
+	let hasParens = false;
+	let stopper = 0;
+	while (split.includes('(') && split.includes(')') && stopper <= 10) {
+		let startParenIdx;
+		let endParenIdx;
+		for (let idx = 0; idx < split.length; idx++) {
+			const val = split[idx];
+			if (val === '(') {
+				startParenIdx = idx;
+			} else if (val === ')') {
+				endParenIdx = idx;
+			}
+			// condense parens
+			if (
+				typeof startParenIdx === 'number' &&
+				typeof endParenIdx === 'number'
+			) {
+				const condensed = split.slice(startParenIdx + 1, endParenIdx);
+				const slice1 = split.slice(0, startParenIdx);
+				const slice2 = split.slice(endParenIdx + 1, split.length);
+				split = [...slice1, condensed, ...slice2];
+
+				startParenIdx = undefined;
+				endParenIdx = undefined;
+				if (!hasParens) {
+					hasParens = true;
+				}
+				break;
+			}
+		}
+		stopper++;
+	}
+
+	if (!hasParens) return crunchFormula(split);
+	console.log({ cruchParens: crunchParensFormula(split) });
+	return crunchParensFormula(split);
+}
+
+function crunchFormula(split) {
+	// order of operations
+	const PEMDAS = ['*', '/', '+', '-'];
 	// iteratate over PEMDAS and join ajacent indexes
 	// ['a','+','b','*','c'] => ['a','+',['b','*','c']]
 	PEMDAS.forEach((op) => {
@@ -21,7 +60,6 @@ export default function getArrayFromString(functionString: string): T_CalcArr {
 		});
 
 		if (opIdxArr.length > 0 && split.length !== 3) {
-			console.log({ opIdxArr, split, op });
 			let opIdxOffset = 0;
 			opIdxArr.forEach((rawSplitOpIdx) => {
 				// offset idx by how many items have been removed
@@ -50,6 +88,19 @@ export default function getArrayFromString(functionString: string): T_CalcArr {
 	});
 
 	return split;
+}
+
+function crunchParensFormula(split) {
+	split.forEach((el, idx) => {
+		if (typeof el === 'object') {
+			const condensed = crunchParensFormula(el);
+			const slice1 = split.slice(0, idx);
+			const slice2 = split.slice(idx + 1, split.length);
+			split = [...slice1, condensed, ...slice2];
+		}
+	});
+
+	return crunchFormula(split);
 }
 
 // input "a+b-c"

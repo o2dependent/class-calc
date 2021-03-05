@@ -7,7 +7,7 @@ import parseFormula from '../calc_helpers/parseFormula';
 import styles from '../styles/Home.module.css';
 
 export default function Home() {
-	const stringFormula = 'a+b*c-d';
+	const stringFormula = '(a+b)/(a*c+(b+c))';
 	const arr: T_CalcArr = getArrayFromString(stringFormula);
 	const [variablesInput, setVariablesInput] = useState<object>(
 		getVariablesFromArray(arr)

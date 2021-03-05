@@ -8,17 +8,18 @@
 // x + y looks like[["x", "+", "y"]]
 // check if val is in math obj
 
-import { T_CalcArr } from "./calcTypes"
-import getFormulaFromArray from "./getFormulaFromArray"
-import getNumberFromFormula from "./getNumberFromFormula"
+import { T_CalcArr } from './calcTypes';
+import formulaFromArray from './formulaFromArray';
+import getNumberFromFormula from './getNumberFromFormula';
 
 export default function parseFormula(
-  arr: T_CalcArr,
-  variables: object
+	arr: T_CalcArr,
+	variables: object
 ): number {
-  // get formula
-  const formula = getFormulaFromArray(arr, variables)
-  const result = getNumberFromFormula(formula)
-  console.log({ result })
-  return result
+	// get formula
+	const formula = formulaFromArray(arr, variables);
+	// get result
+	const result = getNumberFromFormula(formula);
+	console.log({ result });
+	return result;
 }
